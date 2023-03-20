@@ -1,0 +1,21 @@
+{
+    "type": "module",
+    "scripts": {
+        "build": "rimraf dist; tsc",
+        "start": "node dist/index.js | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'",
+        "debug": "DEBUG=true ts-node --esm src/index.ts | pino-pretty -i pid,hostname",
+        "backfill": "DEBUG=true ts-node --esm src/backfill.ts | pino-pretty -i pid,hostname"
+    },
+    "dependencies": {
+        "@types/lodash": "^4.14.191",
+        "discord.js": "^14.7.1",
+        "dotenv": "^16.0.3",
+        "lodash": "^4.17.21",
+        "mongodb": "^5.1.0",
+        "pino": "^8.11.0"
+    },
+    "devDependencies": {
+        "pino-pretty": "^9.4.0",
+        "rimraf": "^4.1.2"
+    }
+}
