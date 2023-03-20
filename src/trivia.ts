@@ -187,6 +187,19 @@ setInterval(async () => {
                                 color: Colors.Red,
                             },
                         ],
+                        components: [
+                            {
+                                type: ComponentType.ActionRow,
+                                components: [
+                                    {
+                                        type: ComponentType.Button,
+                                        label: "Try Again",
+                                        style: ButtonStyle.Secondary,
+                                        customId: doc._id.toString(),
+                                    },
+                                ],
+                            },
+                        ],
                         ephemeral: true,
                     });
                 }
@@ -202,6 +215,7 @@ setInterval(async () => {
                 embeds: [
                     {
                         ...post.embeds[0].toJSON(),
+                        description: doc.question,
                         fields: [
                             doc.answers.length === 1
                                 ? { name: "Answer", value: doc.answers[0] }
@@ -211,6 +225,22 @@ setInterval(async () => {
                     },
                 ],
                 components: [],
+            });
+
+            await post.reply({
+                embeds: [
+                    {
+                        title: "Trivia Answer",
+                        description: doc.question,
+                        color: 0xd9e9f9,
+                        fields: [
+                            doc.answers.length === 1
+                                ? { name: "Answer", value: doc.answers[0] }
+                                : { name: "Answers", value: doc.answers.map((x: string) => `- ${x}`).join("\n") },
+                            ...(doc.explanation ? [{ name: "Explanation", value: doc.explanation }] : []),
+                        ],
+                    },
+                ],
             });
         }, settings.window * 1000);
 
