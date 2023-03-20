@@ -30,6 +30,11 @@ await client.application.commands.set([
                         name: "image",
                         description: "attach an image to this question",
                     },
+                    {
+                        type: ApplicationCommandOptionType.String,
+                        name: "explanation",
+                        description: "explanation to be revealed with the answer",
+                    },
                 ],
             },
             {

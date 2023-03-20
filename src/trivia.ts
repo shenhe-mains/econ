@@ -205,7 +205,8 @@ setInterval(async () => {
                         fields: [
                             doc.answers.length === 1
                                 ? { name: "Answer", value: doc.answers[0] }
-                                : { name: "Answers", value: doc.answers.map((x) => `- ${x}`).join("\n") },
+                                : { name: "Answers", value: doc.answers.map((x: string) => `- ${x}`).join("\n") },
+                            ...(doc.explanation ? [{ name: "Explanation", value: doc.explanation }] : []),
                         ],
                     },
                 ],

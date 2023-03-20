@@ -20,15 +20,16 @@ client.on(Events.InteractionCreate, async (interaction) => {
             if (subgroup) key += `/${subgroup}`;
             if (subcommand) key += `/${subcommand}`;
 
-            let question: string, answers: string[], image: string;
+            let question: string, answers: string[], image: string, explanation: string;
 
             switch (key) {
                 case "trivia/add":
                     question = interaction.options.getString("question", true);
                     answers = interaction.options.getString("answer", true).split(/\s+\/\s+/);
                     image = interaction.options.getAttachment("image", false)?.url;
+                    explanation = interaction.options.getString("explanation", false);
 
-                    await db.trivia_questions.insertOne({ question, answers, image });
+                    await db.trivia_questions.insertOne({ question, answers, image, explanation });
 
                     await interaction.reply({
                         embeds: [
