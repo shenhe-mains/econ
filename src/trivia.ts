@@ -65,9 +65,8 @@ setInterval(async () => {
             ],
         });
 
-        channel.guild.autoModerationRules.cache
-            .find((x) => x.name === "Trivia Answer Blocker")
-            .edit({ triggerMetadata: { keywordFilter: doc.answers } });
+        const rule = await channel.guild.autoModerationRules.fetch(settings.rule);
+        await rule.edit({ triggerMetadata: { keywordFilter: doc.answers } });
 
         const answered = new Set<string>();
         let diminish = 1;
@@ -215,11 +214,10 @@ setInterval(async () => {
         setTimeout(async () => {
             client.removeListener(Events.InteractionCreate, listen);
 
-            channel.guild.autoModerationRules.cache
-                .find((x) => x.name === "Trivia Answer Blocker")
-                .edit({
-                    triggerMetadata: { keywordFilter: ["jldfksjlsdfjlksdfkjlsdklfkjlsdfjklsdfjlkfdskljfdlsjkslfdkj"] },
-                });
+            const rule = await channel.guild.autoModerationRules.fetch(settings.rule);
+            await rule.edit({
+                triggerMetadata: { keywordFilter: ["jldfksjlsdfjlksdfkjlsdklfkjlsdfjklsdfjlkfdskljfdlsjkslfdkj"] },
+            });
 
             await post.edit({
                 embeds: [

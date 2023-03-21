@@ -10,4 +10,5 @@ export default {
     diminish: 10, // percentage,
     window: 60, // seconds
     forbidden: [], // ID list
+    rule: "1087518930916102185", // ID
 };
