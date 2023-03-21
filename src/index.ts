@@ -167,6 +167,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 client.on("messageCreate", async (message) => {
     if (message.author.bot) return;
+    if (message.channel !== settings.channel) return;
     if (!next) return;
 
     const date = new Date(next);
