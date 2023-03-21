@@ -66,7 +66,7 @@ setInterval(async () => {
         });
 
         const rule = await channel.guild.autoModerationRules.fetch(settings.rule);
-        await rule.edit({ triggerMetadata: { keywordFilter: doc.answers } });
+        await rule.edit({ enabled: true, triggerMetadata: { keywordFilter: doc.answers } });
 
         const answered = new Set<string>();
         let diminish = 1;
@@ -215,9 +215,7 @@ setInterval(async () => {
             client.removeListener(Events.InteractionCreate, listen);
 
             const rule = await channel.guild.autoModerationRules.fetch(settings.rule);
-            await rule.edit({
-                triggerMetadata: { keywordFilter: ["jldfksjlsdfjlksdfkjlsdklfkjlsdfjklsdfjlkfdskljfdlsjkslfdkj"] },
-            });
+            await rule.edit({ enabled: false });
 
             await post.edit({
                 embeds: [
