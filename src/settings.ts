@@ -1,8 +1,8 @@
 export default {
-    min_delay: 15, // minutes
+    min_delay: 20, // minutes
     max_delay: 25, // minutes
-    min_reduction: 5, // seconds
-    max_reduction: 10, // seconds
+    min_reduction: 2, // seconds
+    max_reduction: 4, // seconds
     channel: "805458033471782980", // ID
     initial_reward: 100, // event points
     final_reward: 50, // event points
