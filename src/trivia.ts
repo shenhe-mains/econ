@@ -26,7 +26,7 @@ setInterval(async () => {
         schedule();
 
         const channel = await client.channels.fetch(settings.channel);
-        if (!("send" in channel)) return;
+        if (!("send" in channel) || !("guild" in channel) || !channel.guild) return;
 
         const docs = await db.trivia_questions.find({ used: { $exists: false } }).toArray();
 
@@ -64,6 +64,10 @@ setInterval(async () => {
                 },
             ],
         });
+
+        channel.guild.autoModerationRules.cache
+            .find((x) => x.name === "Trivia Answer Blocker")
+            .edit({ triggerMetadata: { keywordFilter: doc.answers } });
 
         const answered = new Set<string>();
         let diminish = 1;
@@ -210,6 +214,12 @@ setInterval(async () => {
 
         setTimeout(async () => {
             client.removeListener(Events.InteractionCreate, listen);
+
+            channel.guild.autoModerationRules.cache
+                .find((x) => x.name === "Trivia Answer Blocker")
+                .edit({
+                    triggerMetadata: { keywordFilter: ["jldfksjlsdfjlksdfkjlsdklfkjlsdfjklsdfjlkfdskljfdlsjkslfdkj"] },
+                });
 
             await post.edit({
                 embeds: [
