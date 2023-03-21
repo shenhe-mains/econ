@@ -144,6 +144,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
                                     .map((entry, index) => `${index + 1}. <@${entry.user}> - \`${entry.score}\``)
                                     .join("\n"),
                                 color: 0xd9e9f9,
+                                footer: {
+                                    text: `Total points achieved: ${
+                                        (
+                                            await db.scores
+                                                .aggregate([{ $group: { _id: "", total: { $sum: "$score" } } }])
+                                                .toArray()
+                                        )[0].total
+                                    }`,
+                                },
                             },
                         ],
                     });

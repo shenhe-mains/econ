@@ -1,4 +1,4 @@
-import { Collection, Db, Document, MongoClient } from "mongodb";
+import { Collection, Document, MongoClient } from "mongodb";
 
 const client = new MongoClient(process.env.DB_CONN_STRING);
 await client.connect();
