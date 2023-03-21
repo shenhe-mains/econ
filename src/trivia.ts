@@ -21,12 +21,14 @@ export async function schedule() {
     return settings;
 }
 
+const waiting = new Map<string, number>();
+
 setInterval(async () => {
     if (next && new Date() >= next) {
         schedule();
 
         const channel = await client.channels.fetch(settings.channel);
-        if (!("send" in channel) || !("guild" in channel) || !channel.guild) return;
+        if (!channel || !("send" in channel) || !("guild" in channel) || !channel.guild) return;
 
         const docs = await db.trivia_questions.find({ used: { $exists: false } }).toArray();
 
@@ -76,26 +78,29 @@ setInterval(async () => {
             if (interaction.customId !== doc._id.toString()) return;
 
             if (interaction.isButton())
-                await interaction.showModal({
-                    customId: doc._id.toString(),
-                    title: "Answer Trivia Question",
-                    components: [
-                        {
-                            type: ComponentType.ActionRow,
-                            components: [
-                                {
-                                    type: ComponentType.TextInput,
-                                    style: TextInputStyle.Short,
-                                    customId: "answer",
-                                    label: "Answer",
-                                    placeholder: `You have ${Math.floor(
-                                        settings.window - (new Date().getTime() - post.createdTimestamp) / 1000,
-                                    )} second(s) to answer.`,
-                                },
-                            ],
-                        },
-                    ],
-                });
+                if (waiting.has(interaction.user.id) && waiting.get(interaction.user.id) > new Date().getTime())
+                    await interaction.reply({ content: "Please wait 10 seconds between answers!", ephemeral: true });
+                else
+                    await interaction.showModal({
+                        customId: doc._id.toString(),
+                        title: "Answer Trivia Question",
+                        components: [
+                            {
+                                type: ComponentType.ActionRow,
+                                components: [
+                                    {
+                                        type: ComponentType.TextInput,
+                                        style: TextInputStyle.Short,
+                                        customId: "answer",
+                                        label: "Answer",
+                                        placeholder: `You have ${Math.floor(
+                                            settings.window - (new Date().getTime() - post.createdTimestamp) / 1000,
+                                        )} second(s) to answer.`,
+                                    },
+                                ],
+                            },
+                        ],
+                    });
             else if (interaction.isModalSubmit()) {
                 const input = interaction.fields.getTextInputValue("answer");
 
@@ -182,6 +187,7 @@ setInterval(async () => {
                         ephemeral: true,
                     });
                 } else {
+                    waiting.set(interaction.user.id, new Date().getTime() + 10000);
                     await interaction.reply({
                         embeds: [
                             {
