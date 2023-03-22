@@ -177,7 +177,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                     await interaction.reply(
                         `${delta > 0 ? "Gave" : "Took"} ${delta} point${delta === 1 ? "" : "s"} ${
                             delta > 0 ? "to" : "from"
-                        } ${user}, and they now have ${(value.value.score ?? 0) + delta} points.`,
+                        } ${user}, and they now have ${(value.value?.score ?? 0) + delta} points.`,
                     );
 
                     break;
