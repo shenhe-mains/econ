@@ -6,6 +6,7 @@ await client.application.commands.set([
         type: ApplicationCommandType.ChatInput,
         name: "trivia",
         description: "manage trivia",
+        dmPermission: false,
         default_member_permissions: "0",
         options: [
             {
@@ -84,14 +85,37 @@ await client.application.commands.set([
         type: ApplicationCommandType.ChatInput,
         name: "score",
         description: "view your / a member's event score",
+        dmPermission: false,
         options: [{ type: ApplicationCommandOptionType.User, name: "user", description: "the user to view" }],
     },
     {
         type: ApplicationCommandType.ChatInput,
         name: "leaderboard",
         description: "view the event leaderboard",
+        dmPermission: false,
         options: [
             { type: ApplicationCommandOptionType.Integer, name: "page", description: "the page to view", minValue: 1 },
+        ],
+    },
+    {
+        type: ApplicationCommandType.ChatInput,
+        name: "add-score",
+        description: "alter a user's score",
+        dmPermission: false,
+        default_member_permissions: "0",
+        options: [
+            {
+                type: ApplicationCommandOptionType.User,
+                name: "user",
+                description: "the user to modify",
+                required: true,
+            },
+            {
+                type: ApplicationCommandOptionType.Integer,
+                name: "delta",
+                description: "the # of points to add (can be negative)",
+                required: true,
+            },
         ],
     },
 ]);

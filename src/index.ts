@@ -1,7 +1,7 @@
 import client from "./client.js";
 import logger from "./logger.js";
 import "./commands.js";
-import { Colors, Events } from "discord.js";
+import { Colors, Events, User } from "discord.js";
 import db from "./db.js";
 import _ from "lodash";
 import { next, schedule, set_next } from "./trivia.js";
@@ -20,7 +20,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             if (subgroup) key += `/${subgroup}`;
             if (subcommand) key += `/${subcommand}`;
 
-            let question: string, answers: string[], image: string, explanation: string;
+            let question: string, answers: string[], image: string, explanation: string, user: User, delta: number;
 
             switch (key) {
                 case "trivia/add":
@@ -110,7 +110,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
                     break;
                 case "score":
-                    const user = interaction.options.getUser("user") ?? interaction.user;
+                    user = interaction.options.getUser("user") ?? interaction.user;
                     const entry = await db.scores.findOne({ user: user.id });
                     const score = entry?.score ?? 0;
 
@@ -125,6 +125,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                             },
                         ],
                     });
+
                     break;
                 case "leaderboard":
                     const page = (interaction.options.getInteger("page") ?? 1) - 1;
@@ -156,6 +157,28 @@ client.on(Events.InteractionCreate, async (interaction) => {
                             },
                         ],
                     });
+
+                    break;
+                case "add-score":
+                    user = interaction.options.getUser("user");
+                    delta = interaction.options.getInteger("delta");
+
+                    if (delta === 0) {
+                        await interaction.reply({ content: "That does nothing.", ephemeral: true });
+                        return;
+                    }
+
+                    const value = await db.scores.findOneAndUpdate(
+                        { user: user.id },
+                        { $inc: { score: delta } },
+                        { upsert: true },
+                    );
+
+                    await interaction.reply(
+                        `${delta > 0 ? "Gave" : "Took"} ${delta} point${delta === 1 ? "" : "s"} ${
+                            delta > 0 ? "to" : "from"
+                        } ${user}, and they now have ${(value.value.score ?? 0) + delta} points.`,
+                    );
 
                     break;
             }
