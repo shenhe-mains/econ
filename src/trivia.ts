@@ -68,7 +68,7 @@ setInterval(async () => {
         });
 
         const rule = await channel.guild.autoModerationRules.fetch(settings.rule);
-        await rule.edit({ enabled: true, triggerMetadata: { keywordFilter: doc.answers } });
+        await rule.edit({ enabled: true, triggerMetadata: { keywordFilter: doc.answers } }).catch(() => null);
 
         const answered = new Set<string>();
         let diminish = 1;
