@@ -1,6 +1,6 @@
 export default {
-    min_delay: 20, // minutes
-    max_delay: 25, // minutes
+    min_delay: 25, // minutes
+    max_delay: 30, // minutes
     min_reduction: 2, // seconds
     max_reduction: 4, // seconds
     channel: "805458033471782980", // ID
