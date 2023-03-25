@@ -223,23 +223,9 @@ setInterval(async () => {
             const rule = await channel.guild.autoModerationRules.fetch(settings.rule);
             await rule.edit({ enabled: false });
 
-            await post.edit({
-                embeds: [
-                    {
-                        ...post.embeds[0].toJSON(),
-                        description: doc.question,
-                        fields: [
-                            doc.answers.length === 1
-                                ? { name: "Answer", value: doc.answers[0] }
-                                : { name: "Answers", value: doc.answers.map((x: string) => `- ${x}`).join("\n") },
-                            ...(doc.explanation ? [{ name: "Explanation", value: doc.explanation }] : []),
-                        ],
-                    },
-                ],
-                components: [],
-            });
+            await post.delete();
 
-            await post.reply({
+            await post.channel.send({
                 embeds: [
                     {
                         title: "Trivia Answer",
